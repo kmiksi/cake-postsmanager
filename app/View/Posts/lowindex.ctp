@@ -1,0 +1,1 @@
+<?php echo __('Low level access of Index'); ?>
