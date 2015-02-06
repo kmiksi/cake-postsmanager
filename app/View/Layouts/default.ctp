@@ -61,7 +61,7 @@ $avatar = $avatars[AuthComponent::user('id') % (count($avatars) - 1)];
         <header class="header">
             <a href="<?php echo $BASE_URL; ?>/" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                CakePHP Test
+                CakePHP Experiment
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -254,7 +254,7 @@ $avatar = $avatars[AuthComponent::user('id') % (count($avatars) - 1)];
                         <small><?php echo ucfirst($title_for_layout); ?></small>
                     </h1>
                     <ol class="breadcrumb">
-                        <li><a href="<?php echo Router::url('/' . strtolower(@$subpage)); ?>"><i class="fa fa-dashboard"></i> <?php echo __('Home'); ?></a></li>
+                        <li><a href="<?php echo Router::url('/'); ?>"><i class="fa fa-dashboard"></i> <?php echo __('Home'); ?></a></li>
                         <li><a href="<?php echo Router::url(array('action' => 'index')); ?>"><?php echo @$subpage; ?></a></li>
                         <li class="active"><?php echo @$page; ?></li>
                     </ol>
