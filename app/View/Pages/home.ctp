@@ -29,66 +29,27 @@ App::uses('Debugger', 'Utility');
 <div class="row">
     <div class="col-md-4">
         <!-- Default box -->
-        <div class="box box-solid">
+        <div class="box box-primary">
             <div class="box-header">
-                <h3 class="box-title">Control Panel</h3>
+                <h3 class="box-title">References</h3>
             </div>
             <div class="box-body">
-                <div>
-                    <a href="//<?php
-                    print
-                            $_SERVER{'HTTP_HOST'};
-                    ?>/pages/dashboard"><img
-                            src="images/filemanager.png"/>Dashboard</a>
-                </div>
-                <div>
-                    <a href="https://<?php
-                    print
-                            $_SERVER{'HTTP_HOST'};
-                    ?>:12320"><img
-                            src="images/shell.png"/>Web Shell</a>
-                </div>
-                <div>
-                    <a href="https://<?php
-                    print
-                            $_SERVER{'HTTP_HOST'};
-                    ?>:12321"><img
-                            src="images/webmin.png"/>Webmin</a>
-                </div>
-                <div>
-                    <a href="https://<?php
-                    print
-                            $_SERVER{'HTTP_HOST'};
-                    ?>:12322"><img
-                            src="images/phpmyadmin.png"/>PHPMyAdmin</a>
-                </div>
-                <div class="panel box box-primary">
-                    <div class="box-header">
-                        <h4 class="box-title">
-                            References
-                        </h4>
-                    </div>
-                    <div style="" class="panel-collapse collapse in">
-                        <div class="box-body">
-                            <ul>
-                                <li><a href="http://www.cakefoundation.org">
-                                        Cake Software Foundation</a></li>
-                                <li>
-                                    <a href="http://www.cakephp.org">
-                                        CakePHP website</a>,
-                                    <a href="http://book.cakephp.org">
-                                        documentation</a> and 
-                                    <a href="http://api20.cakephp.org">
-                                        API</a>
-                                </li>
-                                <li><a href="http://book.cakephp.org/2.0/en/tutorials-and-examples/blog/blog.html">
-                                        CakePHP 15 minute blog tutorial</a></li>
-                                <li><a href="http://www.turnkeylinux.org/cakephp">
-                                        TurnKey CakePHP release notes</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <ul>
+                    <li><a href="http://www.cakefoundation.org">
+                            Cake Software Foundation</a></li>
+                    <li>
+                        <a href="http://www.cakephp.org">
+                            CakePHP website</a>,
+                        <a href="http://book.cakephp.org">
+                            documentation</a> and
+                        <a href="http://api20.cakephp.org">
+                            API</a>
+                    </li>
+                    <li><a href="http://book.cakephp.org/2.0/en/tutorials-and-examples/blog/blog.html">
+                            CakePHP 15 minute blog tutorial</a></li>
+                    <li><a href="http://www.turnkeylinux.org/cakephp">
+                            TurnKey CakePHP release notes</a></li>
+                </ul>
             </div><!-- /.box-body -->
         </div><!-- /.box -->
     </div><!-- /.col -->
