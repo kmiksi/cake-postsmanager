@@ -9,7 +9,7 @@ CREATE TABLE levels (
   description VARCHAR(45) NOT NULL DEFAULT '',
   PRIMARY KEY (id)
 );
-INSERT INTO levels (id, description) VALUES (1, 'admin'), (2, 'user');
+INSERT INTO levels (id, name, description) VALUES (1, 'admin', 'Admin'), (2, 'user', 'User');
 
 CREATE TABLE users (
   id INT NOT NULL AUTO_INCREMENT,
