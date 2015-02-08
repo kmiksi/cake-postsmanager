@@ -21,10 +21,11 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 $avatar = $avatars[AuthComponent::user('id') % (count($avatars) - 1)];
 ?>
 <!DOCTYPE html>
-<html>
+<html ng-app="websiteApp">
     <head>
         <?php echo $this->Html->charset(); ?>
         <title>
+            Angular -
             <?php echo $cakeDescription ?>:
             <?php echo $title_for_layout; ?>
         </title>
@@ -55,6 +56,13 @@ $avatar = $avatars[AuthComponent::user('id') % (count($avatars) - 1)];
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
+
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
+        <script type="text/javascript">
+            'use strict';
+            // app module
+            var website = angular.module('websiteApp', []);
+        </script>
     </head>
     <body class="skin-blue">
         <!-- header logo: style can be found in header.less -->
@@ -242,7 +250,8 @@ $avatar = $avatars[AuthComponent::user('id') % (count($avatars) - 1)];
                         </li>
                         <li>
                             <a href="<?php echo Router::url('/angular'); ?>">
-                                <i class="fa fa-gift"></i> <span><?php echo __('Angular experiment'); ?></span>
+                                <i class="fa fa-gift"></i>
+                                <span><?php echo __('Angular experiment'); ?></span>
                             </a>
                         </li>
                     </ul>
