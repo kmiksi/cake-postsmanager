@@ -64,35 +64,6 @@ class AngularController extends AppController {
     }
 
     /**
-     * Do login.
-     * The authentication is made by POST, error messages are displayed on login page
-     */
-    public function login() {
-        if ($this->request->is('post')) {
-            if ($this->Auth->login()) {
-                $this->redirect($this->Auth->redirect());
-            } else {
-                $this->Session->setFlash(__('Invalid username or password, try again'));
-            }
-        }
-
-        if (!$this->User->hasUsers()) {
-            $this->redirect('register');
-        }
-
-        $this->set('page', __('Login'));
-        $this->set('title_for_layout', __('Log into your account'));
-        $this->render('login', 'userform');
-    }
-
-    /**
-     * Do a logout
-     */
-    public function logout() {
-        $this->redirect($this->Auth->logout());
-    }
-
-    /**
      * Public area for authenticated users.
      * Here you can see all users details
      */
@@ -201,14 +172,6 @@ class AngularController extends AppController {
             $msg = __('Error: The user was not deleted');
         }
         die($msg);
-    }
-
-    /**
-     * Empty page to check admin permissions
-     */
-    public function config() {
-        $this->set('page', __('Configurations'));
-        $this->set('title_for_layout', __('Checking admin permissions'));
     }
 
     /**
