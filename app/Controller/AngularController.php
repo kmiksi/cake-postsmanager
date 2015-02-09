@@ -7,26 +7,18 @@ App::uses('AppController', 'Controller');
  */
 class AngularController extends AppController {
 
-    public $uses = array('User');
-
     /**
-     * If we have no users, then allow anyone to register the first admin account
+     * Define that we will use this model inside this controller
+     * @var User Model Class
      */
-    public function beforeFilter() {
-        parent::beforeFilter();
-        if ($this->User->hasUsers()) {
-            $this->Auth->allow('login', 'logout');
-        } else {
-            $this->Auth->allow('register', 'login', 'logout');
-        }
-    }
+    public $uses = array('User');
 
     /**
      * Set information needed by default template
      */
     public function beforeRender() {
         parent::beforeRender();
-        $this->set('subpage', __('Users'));
+        $this->set('subpage', __('Angular'));
     }
 
     /**
@@ -34,7 +26,7 @@ class AngularController extends AppController {
      * This method is public when have no users in database. In this case will create a admin user.
      * Otherwise, only admins can register.
      */
-    public function register() {
+    public function add() {
         if ($this->request->is('post')) {
             $this->User->create();
             if (!$this->User->hasUsers()) {
@@ -56,16 +48,9 @@ class AngularController extends AppController {
     }
 
     /**
-     * An alias to register call
-     * @see register
-     */
-    public function add() {
-        return $this->register();
-    }
-
-    /**
      * Public area for authenticated users.
-     * Here you can see all users details
+     * Here you can see all users details.
+     * This page was changed to use Angular.js in front-end
      */
     public function index() {
         $this->set('page', __('User list'));
@@ -75,26 +60,19 @@ class AngularController extends AppController {
         $this->render('index', 'angular');
     }
 
+    /**
+     * This method provide a json representation of userlist (or single user).
+     * @param mixed $userids The selected ids of users, imploded by comma (,)
+     */
     public function get($userids = NULL) {
         $this->User->recursive = -1;
         $query = array(
             'fields' => array('User.id', 'User.username', 'User.name', 'User.created', 'User.level', 'Level.description',),
-            //'joins' => array(
-            //    'table' => 'levels',
-            //    'alias' => 'Level',
-            //    'type' => 'LEFT',
-            //    'condictions' => array(
-            //        'Level.id = User.level',
-            //    ),
-            //),
             'joins' => array(
                 array(
                     'table' => 'levels',
                     'alias' => 'Level',
-                    //'type' => 'LEFT',
-                    'conditions' => array(
-                        'User.level = Level.id',
-                    )
+                    'conditions' => array('User.level = Level.id',)
                 )
             ),
             'recursive' => -1,
@@ -177,10 +155,9 @@ class AngularController extends AppController {
     /**
      * Set permissions, blocking access of non-admins on register, delete and config actions
      * Currently, it allow to see:
-     * - visitors: login, logout, register when has no user ( @see self::beforeFilter() )
      * - users: index
      * - own user: profile
-     * - admins: register, delete, config, profile
+     * - admins: add, delete, profile
      * @param array $user User to check permissions
      * @return boolean
      */
