@@ -3,16 +3,13 @@
         <div class="box-header">
             <h3 class="box-title"><?php echo __('List of users'); ?></h3>
             <div class="box-tools">
-                <form action="" method="get">
-                    <div class="input-group" title="<?php echo __('order: {{orderProp}}
+                <div class="input-group" title="<?php echo __('order: {{orderProp}}
 TIP: Click under collumn title to change ordering.'); ?>">
-                        <input type="text" name="q" class="form-control input-sm pull-right" style="width: 150px;" placeholder="<?php echo __('Search'); ?>"
-                               ng-model="querystring">
-                        <div class="input-group-btn">
-                            <button class="btn btn-sm btn-default"><i class="fa fa-search"></i></button>
-                        </div>
+                    <div class="input-group-btn">
+                        <input type="text" class="form-control input-sm pull-right" style="width: 150px;"
+                               placeholder="<?php echo __('Search'); ?>" ng-model="querystring" />
                     </div>
-                </form>
+                </div>
             </div>
         </div><!-- /.box-header -->
         <div class="box-body table-responsive no-padding">
@@ -42,14 +39,14 @@ TIP: Click under collumn title to change ordering.'); ?>">
     <div class="btn-toolbar pad">
         <a href="<?php echo Router::url('/angular/'); ?>" class="btn btn-default fa fa-refresh"> <?php echo __('Reload page'); ?></a>
         <a href="<?php echo Router::url('/angular/add'); ?>" class="btn btn-success btn-large fa fa-plus"> <?php echo __('Add user'); ?></a>
-        <a href="<?php echo Router::url('/angular/profile'); ?>" class="btn btn-success btn-large fa fa-credit-card"> <?php echo __('Edit your profile'); ?></a>
+        <a href="<?php echo Router::url('/angular/profile'); ?>" class="btn btn-primary btn-large fa fa-credit-card"> <?php echo __('Edit your profile'); ?></a>
     </div>
 </div>
 <script type="text/javascript">
     "use strict";
     website.controller('UserListController', ['$scope', '$http', function($scope, $http) {
             $scope.updateList = function() {
-                $scope.orderProp = 'User.id';
+                $scope.orderProp = 'User.created';
                 $http.get('<?php echo Router::url('/angular/get/'); ?>').success(function(data) {
                     $scope.users = data;
                 });
