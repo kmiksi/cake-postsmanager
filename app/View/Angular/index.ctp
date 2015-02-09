@@ -1,5 +1,5 @@
-<div class="col-xs-12">
-    <div class="box" ng-controller="UserListController">
+<div class="col-xs-12" ng-controller="UserListController">
+    <div class="box">
         <div class="box-header">
             <h3 class="box-title"><?php echo __('List of users'); ?></h3>
             <div class="box-tools">
@@ -13,7 +13,7 @@ TIP: Click under collumn title to change ordering.'); ?>">
             </div>
         </div><!-- /.box-header -->
         <div class="box-body table-responsive no-padding">
-            <table class="table table-hover" id="userstable">
+            <table class="table table-hover" id="userstable" style="transition: height 0.8s;">
                 <tr>
                     <th ng-click="orderProp='User.id'"><?php echo __('ID'); ?></th>
                     <th ng-click="orderProp='User.username'"><?php echo __('Username'); ?></th>
@@ -29,7 +29,6 @@ TIP: Click under collumn title to change ordering.'); ?>">
                         <td><a href="<?php echo Router::url('/angular/profile/{{user.User.id}}'); ?>">{{user.User.name}}</a></td>
                         <td>{{user.User.created}}</td>
                         <td><span class="label label-{{user.User.level == 1 ? 'primary' : 'success'}}">{{user.Level.description}}</span></td>
-                        <!--<td><a href="<?php echo Router::url('/angular/delete/'); ?>{{user.User.id}}" class="btn btn-danger btn-sm" onclick="return confirm('<?php echo __('BE CAREFULL!\nDo you want to delete this user and all your posts?'); ?>');"><i class="fa fa-trash-o"></i></a></td>-->
                         <td><button class="btn btn-danger btn-sm" ng-click="deleteUser(user.User.id)"><i class="fa fa-trash-o"></i></button></td>
                     </tr>
                 </div>
@@ -37,15 +36,17 @@ TIP: Click under collumn title to change ordering.'); ?>">
         </div><!-- /.box-body -->
     </div><!-- /.box -->
     <div class="btn-toolbar pad">
+        <button class="btn btn-default fa fa-refresh" ng-click="updateList()"> <?php echo __('Call $scope.updateList()'); ?></button>
         <a href="<?php echo Router::url('/angular/'); ?>" class="btn btn-default fa fa-refresh"> <?php echo __('Reload page'); ?></a>
         <a href="<?php echo Router::url('/angular/add'); ?>" class="btn btn-success btn-large fa fa-plus"> <?php echo __('Add user'); ?></a>
         <a href="<?php echo Router::url('/angular/profile'); ?>" class="btn btn-primary btn-large fa fa-credit-card"> <?php echo __('Edit your profile'); ?></a>
     </div>
-</div>
+</div><!-- UserListController -->
 <script type="text/javascript">
     "use strict";
     website.controller('UserListController', ['$scope', '$http', function($scope, $http) {
             $scope.updateList = function() {
+                $scope.users = [];
                 $scope.orderProp = 'User.created';
                 $http.get('<?php echo Router::url('/angular/get/'); ?>').success(function(data) {
                     $scope.users = data;
