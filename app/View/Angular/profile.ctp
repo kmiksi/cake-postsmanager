@@ -29,12 +29,12 @@
             <input type="password" name="password2" class="form-control" placeholder="<?php echo __('Retype new password'); ?>" value=""/>
         </div>
     </div>
-    <div class="footer">                    
+    <div class="footer">
 
         <button type="submit" class="btn bg-olive btn-block"><?php echo __('Save'); ?></button>
 
         <?php if ($hasUsers) { ?>
-            <p><a href="<?php echo Router::url('/') ?>" class="text-center btn btn-default"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> <?php echo __('Go to home'); ?></a></p>
+            <p><a href="<?php echo Router::url('/angular') ?>" class="text-center btn btn-default"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> <?php echo __('Go back'); ?></a></p>
         <?php } ?>
     </div>
 </form>
