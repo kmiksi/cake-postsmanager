@@ -13,7 +13,7 @@ TIP: Click under collumn title to change ordering.'); ?>">
             </div>
         </div><!-- /.box-header -->
         <div class="box-body table-responsive no-padding">
-            <table class="table table-hover" id="userstable" style="transition: height 0.8s;">
+            <table class="table table-hover" id="userstable">
                 <tr>
                     <th ng-click="orderProp='User.id'"><?php echo __('ID'); ?></th>
                     <th ng-click="orderProp='User.username'"><?php echo __('Username'); ?></th>
