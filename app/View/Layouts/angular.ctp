@@ -57,12 +57,11 @@ $avatar = $avatars[AuthComponent::user('id') % (count($avatars) - 1)];
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
         <![endif]-->
 
-        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
-        <script type="text/javascript">
-            'use strict';
-            // app module
-            var website = angular.module('websiteApp', []);
-        </script>
+        <!--<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>-->
+        <script src="<? echo $BASE_URL; ?>/js/angular-1.3.13/angular.min.js"></script>
+        <script src="<? echo $BASE_URL; ?>/js/angular-1.3.13/angular-resource.min.js"></script>
+        <script src="<? echo $BASE_URL; ?>/js/angular/app.js"></script>
+        <script src="<? echo $BASE_URL; ?>/js/angular/controllers.js"></script>
     </head>
     <body class="skin-blue">
         <!-- header logo: style can be found in header.less -->
@@ -331,13 +330,5 @@ $avatar = $avatars[AuthComponent::user('id') % (count($avatars) - 1)];
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" type="text/javascript"></script>
         <!-- AdminLTE App -->
         <script src="<?php echo $BASE_URL; ?>/adminlte/js/AdminLTE/app.js" type="text/javascript"></script>
-        <!-- Bootstrap WYSIHTML5 -->
-        <script src="<?php echo $BASE_URL; ?>/adminlte/js/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js" type="text/javascript"></script>
-        <script type="text/javascript">
-            $(function () {
-                //bootstrap WYSIHTML5 - text editor
-                $("textarea.bootstrap-wysihtml5").wysihtml5();
-            });
-        </script>
     </body>
 </html>

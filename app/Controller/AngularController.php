@@ -22,32 +22,6 @@ class AngularController extends AppController {
     }
 
     /**
-     * Add a user into the system.
-     * This method is public when have no users in database. In this case will create a admin user.
-     * Otherwise, only admins can register.
-     */
-    public function add() {
-        if ($this->request->is('post')) {
-            $this->User->create();
-            if (!$this->User->hasUsers()) {
-                $this->request->data['level'] = 1;
-            }
-            if ($this->request->data['password'] !== $this->request->data['password2']) {
-                $this->Session->setFlash(__('Passwords did not match.'));
-            } else if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('Success: User correctly added.'));
-                $this->redirect(array('controller' => 'pages', 'action' => 'dashboard'));
-            } else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
-            }
-        }
-
-        $this->set('hasUsers', $this->User->hasUsers());
-        $this->set('title_for_layout', __('Register an account'));
-        $this->render('register', 'userform');
-    }
-
-    /**
      * Public area for authenticated users.
      * Here you can see all users details.
      * This page was changed to use Angular.js in front-end
@@ -61,95 +35,97 @@ class AngularController extends AppController {
     }
 
     /**
-     * This method provide a json representation of userlist (or single user).
+     * This method serves as a simple User WebService, accepting these HTTP requests:
+     *      - GET: search/list all users
+     *      - POST: add a single user
+     *      - DELETE: delete a single user
      * @param mixed $userids The selected ids of users, imploded by comma (,)
+     * @return void As return, provide a json representation of userlist query. Or messages sended to view.
      */
-    public function get($userids = NULL) {
-        $this->User->recursive = -1;
-        $query = array(
-            'fields' => array('User.id', 'User.username', 'User.name', 'User.created', 'User.level', 'Level.description',),
-            'joins' => array(
-                array(
-                    'table' => 'levels',
-                    'alias' => 'Level',
-                    'conditions' => array('User.level = Level.id',)
-                )
-            ),
-            'recursive' => -1,
-        );
-        if (!is_null($userids) && !empty($userids)) {
-            $query['conditions'] = array(
-                'User.id' => explode(",", $userids)
-            );
-        }
-        $result = $this->User->find('all', $query);
-        header('Content-Type: application/json');
-        die(json_encode($result));
-    }
+    public function users($userids = NULL) {
+        //$this->response->statusCode(500); // http://www.recessframework.org/page/towards-restful-php-5-basic-tips#tip3
+        //$this->response->type('json'); // http://book.cakephp.org/2.0/pt/controllers/request-response.html
 
-    /**
-     * Edit a profile of a user.
-     * These can be either the own user (id present or supressed), as another user (only for admins)
-     * @param int $userid ID of user to see profile. If supressed, will edit the current user profile
-     * @throws NotFoundException when id is invalid
-     */
-    public function profile($userid = null) {
-        if ($this->request->is('post') && !empty($this->request->data['id'])) {
-            $this->User->id = $this->request->data['id'];
+        @ini_set('display_errors', false); // prevent errors on json output
+
+        if ($this->request->is('put')) { // edit
+            // oh, no! PHP does not have a $_PUT ...
+            $user = json_decode(file_get_contents("php://input"));
+
+            $this->User->id = @$user->User->id;
             if (!$this->User->exists()) {
-                throw new NotFoundException(__('Can not find specifyed user'));
-            }
-            if (!empty($this->request->data['password']) && $this->request->data['password'] !== $this->request->data['password2']) {
-                $this->Session->setFlash(__('Passwords did not match.'));
+                $return = __('Error') . ": " . __('Can not find specifyed user');
+                $this->response->statusCode(400); // invalid request
+            } else if (!empty($user->User->password) && $user->User->password !== @$user->User->password2) {
+                $return = __('Error') . ": " . __('Passwords did not match.');
+                $this->response->statusCode(400); // invalid request
             } else {
-                unset($this->request->data['username'], $this->request->data['level'], $this->request->data['created']);
-                if (empty($this->request->data['password'])) {
-                    unset($this->request->data['password']);
+                unset($user->User->username, $user->Level->description, $user->User->created, $user->User->password2);
+                if (empty($user->User->password)) {
+                    unset($user->User->password);
                 }
-                if ($this->User->save($this->request->data)) {
-                    $this->Session->setFlash(__('Success: Profile updated'));
-                    $this->redirect(array('controller' => 'pages', 'action' => 'dashboard'));
+                if ($this->User->save((array) $user->User)) {
+                    $return = array('data' => __('Success: Profile updated'));
                 } else {
-                    $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+                    $return = __('Error') . ": " . __('The user could not be saved. Please, try again.');
+                    $this->response->statusCode(500); // server error
                 }
             }
+        } else if ($this->request->is('post')) { // add
+            $user = json_decode(file_get_contents("php://input"));
+            $this->User->create();
+            if (!$this->User->hasUsers()) {
+                $user->User->level = 1;
+            }
+            if (empty($user->User->password)) {
+                $return = __('Error') . ": " . __('Please fill the password field.');
+                $this->response->statusCode(400); // invalid request
+            } else if ($user->User->password !== @$user->User->password2) {
+                $return = __('Error') . ": " . __('Passwords did not match.');
+                $this->response->statusCode(400); // invalid request
+            } else if (!$this->User->save($user->User)) {
+                $return = __('Error') . ": " . __('The user could not be saved. Please, try again.');
+                $this->response->statusCode(500); // server error (when deletting)
+            } else {
+                $return = array('data' => __('Success: User correctly added.'));
+                $this->response->statusCode(201); // created
+            }
+        } else if ($this->request->is('delete')) { // purge
+            $this->User->id = $userids;
+            if (!$this->User->exists()) {
+                $return = __('Error') . ": " . __('Invalid user');
+                $this->response->statusCode(404); // not found
+            } else if (!$this->User->delete($userids, true)) {
+                $return = __('Error: The user was not deleted');
+                $this->response->statusCode(500); // server error
+            } else {
+                $return = array('data' => __('Note: User and his data was deleted'));
+            }
+        } else if ($this->request->is('get')) { // list
+            $this->User->recursive = -1;
+            $query = array(
+                'fields' => array('User.id', 'User.username', 'User.name', 'User.created', 'User.level', 'Level.description',),
+                'joins' => array(
+                    array(
+                        'table' => 'levels',
+                        'alias' => 'Level',
+                        'conditions' => array('User.level = Level.id',),
+                    )
+                ),
+                'recursive' => -1,
+            );
+            if (!is_null($userids) && !empty($userids)) {
+                $query['conditions'] = array(
+                    'User.id' => explode(",", $userids),
+                );
+            }
+            $return = $this->User->find('all', $query);
+            //header('Content-Type: application/json');
+            $this->response->type('json');
         }
-
-        $this->User->recursive = -1;
-
-        if (empty($userid)) {
-            $userid = AuthComponent::user('id');
-        }
-
-        $user = $this->User->findById($userid);
-        if (empty($user['User'])) {
-            throw new NotFoundException(__('User not found'));
-        }
-
-        $this->set('user', $user);
-
-        $this->set('page', __('Edit your profile'));
-        $this->set('hasUsers', $this->User->hasUsers());
-        $this->set('title_for_layout', __('Profile for user %s', AuthComponent::user('name')));
-        $this->render('profile', 'userform');
-    }
-
-    /**
-     * Delete a user (only admins can delete users)
-     * @param int $id
-     * @throws NotFoundException when id is invalid
-     */
-    public function delete($id = null) {
-        $this->User->id = $id;
-        if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
-        }
-        if ($this->User->delete($id, true)) {
-            $msg = __('Note: User and his data was deleted');
-        } else {
-            $msg = __('Error: The user was not deleted');
-        }
-        die($msg);
+        //die($return);
+        $this->set('return', json_encode($return));
+        $this->render('ajax', 'ajax');
     }
 
     /**
